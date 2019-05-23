@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const axios = require('axios');
+const sha1 = require('js-sha1');
 
 /** Do HTTP request to get the challenge  */
 const getChallenge = async () => {
@@ -35,7 +36,37 @@ const main = async () => {
     
     // up to now, we work with our file and on cipher
     let answer = JSON.parse(fs.readFileSync('answer.json'));
-    console.log(answer);
+    //console.log(answer);
+
+    // deciphering
+    const MIN_CODE = 97; // a code
+    const MAX_CODE = 122; // z code
+    const stepAtoZ = 1; // the passing from A to Z consumes one step.
+    const input = answer.cifrado.toLowerCase();
+    const shift = answer.numero_casas;
+    let output = "";
+    //console.log(input);
+    for (let i = 0; i < input.length; i++) {
+        let c = input[i];
+        // only letters
+        if ( c.match(/[a-z]/g) ) {
+            let code = input.charCodeAt(i);
+            if ( (code - shift) < MIN_CODE) {
+                let resetShift = MIN_CODE - (code-shift) -stepAtoZ ; // if we start counting from inverse, we must add a stepAtoZ
+                output += String.fromCharCode(MAX_CODE - resetShift);
+            } else {
+                output += String.fromCharCode(code - shift);
+            }
+        } else {
+            output += c;
+        }
+    }
+    
+    answer.decifrado = output;
+    answer.resumo_criptografico = sha1(output);
+    await saveFile(JSON.stringify(answer));
+    
+    console.log(output);
     
 
 }

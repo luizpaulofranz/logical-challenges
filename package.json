@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/luizpaulofranz/logical-challenges#readme",
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "js-sha1": "^0.6.0"
   }
 }
