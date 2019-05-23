@@ -3,6 +3,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const sha1 = require('js-sha1');
+const FormData = require('form-data');
 
 /** Do HTTP request to get the challenge  */
 const getChallenge = async () => {
@@ -66,7 +67,19 @@ const main = async () => {
     answer.resumo_criptografico = sha1(output);
     await saveFile(JSON.stringify(answer));
     
-    console.log(output);
+	let formData = new FormData();
+	// const answerFile = fs.readFileSync('answer.json');
+	const answerFile = fs.createReadStream('answer.json')
+	formData.append("answer", answerFile);
+	axios.post('https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=0bd39553e11b7144a867283c18abf9c8e37ed5a1', formData, {
+		headers: {
+		  'Content-Type': 'multipart/form-data'
+		}
+	})
+	.then( ret => {console.log(ret)} )
+	.catch(err => {console.log(err)});
+	
+    console.log("Fim!");
     
 
 }
