@@ -1,0 +1,26 @@
+{
+  "name": "logical-challenges",
+  "version": "1.0.0",
+  "description": "Algorithmic problems solved with JS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luizpaulofranz/logical-challenges.git"
+  },
+  "keywords": [
+    "algorithm",
+    "challenge"
+  ],
+  "author": "Luiz Paulo Franz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luizpaulofranz/logical-challenges/issues"
+  },
+  "homepage": "https://github.com/luizpaulofranz/logical-challenges#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}
