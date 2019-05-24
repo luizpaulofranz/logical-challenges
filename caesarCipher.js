@@ -5,7 +5,7 @@ const axios = require('axios');
 const sha1 = require('js-sha1');
 const FormData = require('form-data');
 
-/** Do HTTP request to get the challenge  */
+/** Do HTTP request to get the challenge from codenation.  */
 const getChallenge = async () => {
     try {
       return await axios.get('https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token=0bd39553e11b7144a867283c18abf9c8e37ed5a1')
@@ -14,13 +14,30 @@ const getChallenge = async () => {
     }
 }
 
+/** Do HTTP request to send the challenge solution to codenation.  */
+const sendChallenge = async (filePath = __dirname + '/answer.json') => {
+    try {
+		let formData = new FormData();
+		formData.append("answer", fs.createReadStream(filePath), "answer.json");
+		const ret = await axios.post('https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=0bd39553e11b7144a867283c18abf9c8e37ed5a1', formData, {
+			headers: formData.getHeaders()
+		});
+		console.log(ret.data);
+		return ret;
+    } catch (error) {
+		console.error('Error on sending request!');
+		console.error(error);
+		return false;
+    }
+}
+
 /**
  * Save our answer file.
- * @param {JSON} content 
+ * @param {JSON Object} content.
  */
 const saveFile = async (content) => {
     
-    fs.writeFileSync("answer.json", JSON.stringify(content), function(err) {
+    await fs.writeFileSync("answer.json", JSON.stringify(content), function(err) {
         if(err) {
             console.log(err);
             return false;
@@ -31,20 +48,19 @@ const saveFile = async (content) => {
     }); 
 }
 
-const main = async () => {
-    const content = await getChallenge();
-    await saveFile(content.data);
-    
-    // up to now, we work with our file and on cipher
-    let answer = JSON.parse(fs.readFileSync('answer.json'));
-    //console.log(answer);
-
-    // deciphering
-    const MIN_CODE = 97; // a code
-    const MAX_CODE = 122; // z code
+/**
+ * Decipher our caesar cipher strings.
+ *
+ * @param {string} input - ciphered message, IN LOWER CASE.
+ * @param {integer} shift - number of steps to shift the letters.
+ * @return {string} output - deciphered message, IN LOWER CASE.
+ */
+const decipherCaesarCipher = (input, shift) => {
+	// ALGORITHM CONSTANTS
+    const MIN_CODE = 97; // letter a code
+    const MAX_CODE = 122; // letter z code
     const stepAtoZ = 1; // the passing from A to Z consumes one step.
-    const input = answer.cifrado.toLowerCase();
-    const shift = answer.numero_casas;
+	
     let output = "";
     //console.log(input);
     for (let i = 0; i < input.length; i++) {
@@ -62,26 +78,32 @@ const main = async () => {
             output += c;
         }
     }
+	
+	return output;
+}
+
+
+const main = async () => {
+	// comes from API, and we save it locally on a json file
+    const content = await getChallenge();
+    await saveFile(content.data);
     
+    let answer = JSON.parse(fs.readFileSync('answer.json'));
+    //console.log(answer);
+	
+    let output = decipherCaesarCipher(answer.cifrado.toLowerCase(), answer.numero_casas);
+    
+	// change our answer obj to update the file with deciphered msg and sha1
     answer.decifrado = output;
     answer.resumo_criptografico = sha1(output);
-    await saveFile(JSON.stringify(answer));
+    await saveFile(answer);
     
-	let formData = new FormData();
-	// const answerFile = fs.readFileSync('answer.json');
-	const answerFile = fs.createReadStream('answer.json')
-	formData.append("answer", answerFile);
-	axios.post('https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=0bd39553e11b7144a867283c18abf9c8e37ed5a1', formData, {
-		headers: {
-		  'Content-Type': 'multipart/form-data'
-		}
-	})
-	.then( ret => {console.log(ret)} )
-	.catch(err => {console.log(err)});
-	
-    console.log("Fim!");
-    
-
+	// send axios request
+	if(await sendChallenge()) {
+		console.log("The End!");
+	} else {
+		console.log("Error on API Request!");
+	}
 }
 
 main();
