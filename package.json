@@ -4,7 +4,7 @@
   "description": "Algorithmic problems solved with JS.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "homepage": "https://github.com/luizpaulofranz/logical-challenges#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "jest": "^24.8.0",
     "js-sha1": "^0.6.0"
   }
 }
