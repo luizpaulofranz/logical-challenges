@@ -65,7 +65,7 @@ const decipherCaesarCipher = (input, shift) => {
     //console.log(input);
     for (let i = 0; i < input.length; i++) {
         let c = input[i];
-        // only letters
+        // only letters, g flag indicate that regex must be tested against the entire string
         if ( c.match(/[a-z]/g) ) {
             let code = input.charCodeAt(i);
             if ( (code - shift) < MIN_CODE) {
