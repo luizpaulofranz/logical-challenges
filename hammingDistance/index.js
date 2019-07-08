@@ -12,13 +12,8 @@ function hammingDistance(textA, textB) {
     let count = 0;
     if (textA.length === textB.length) {
         for (let i = 0; textA.length > i; i++) {
-            /*
             if (textA[i].toLowerCase() != textB[i].toLowerCase()) {
                 count++;
-            }*/
-
-            if (textA[++i].toLowerCase() != textB[++i].toLowerCase()) {
-                count++
             }
         }
         return count;
