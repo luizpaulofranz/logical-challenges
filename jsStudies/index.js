@@ -1,6 +1,12 @@
 /** ################### DATA DEFINITIONS ################### */
 const arrStr = ['item1', 'item2', 'item3', 'item4', 'item5'];
 const arrInt = [12, 5, 130, 8, 44];
+const str = 'abcde';
+const simpleObj = {
+    id: 10,
+    name: "Poe Dameron",
+    years: 14,
+};
 const pilots = [
     {
       id: 10,
@@ -75,3 +81,17 @@ console.log(splice); // should return [ "item2", "item3" ] - deleted items
 const join = arrStr.join(' - ');
 console.log("JOIN Example.");
 console.log(join); // should return "item1 - item2 - item3 - item4 - item5"
+
+/** ################### FOR OF ################### */
+/* iterates over iterable objects like arrays and strings, to iterates over objects uses for in */
+console.log("FOR OF Example.");
+for(let char of str) {
+    console.log(char); // should return all chars
+}
+
+/** ################### FOR IN ################### */
+/* iterates over object properties */
+console.log("FOR IN Example.");
+for(let prop in simpleObj) {
+    console.log(simpleObj[prop]); // should return all properties values
+}
