@@ -54,3 +54,24 @@ console.log(find); // should be 5
 const filter = arrInt.filter( element => element < 10 );
 console.log("FILTER Example.");
 console.log(filter); // should be [ 5, 8 ]
+
+/** ################### SLICE ################### */
+/* returns a new array which is a sub-part of the main one */
+// start index and end index, it could be negative indexes, the second argument is optional
+const slice = arrStr.slice(2,4);
+console.log("SLICE Example.");
+console.log(slice); // should be [ "item3", "item4" ]
+
+/** ################### SPLICE ################### */
+/* alter the given array */
+// start index, delete counter, new items
+const splice = arrStr.splice(1, 2, "novoItem1", "novoItem2");
+console.log("SPLICE Example.");
+console.log(splice); // should return [ "item2", "item3" ] - deleted items
+
+/** ################### JOIN ################### */
+/* returns a string joining all elements */
+// start index and end index, it could be negative indexes, the second argument is optional
+const join = arrStr.join(' - ');
+console.log("JOIN Example.");
+console.log(join); // should return "item1 - item2 - item3 - item4 - item5"
